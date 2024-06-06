@@ -52,12 +52,6 @@ export const menuData: Menus[] = [
                 title: '上传',
             },
             {
-                id: '23',
-                pid: '2',
-                index: '/carousel',
-                title: '走马灯',
-            },
-            {
                 id: '24',
                 pid: '2',
                 index: '/calendar',
@@ -160,13 +154,6 @@ export const menuData: Menus[] = [
                 title: 'echarts图表',
             },
         ],
-    },
-    {
-        id: '5',
-        icon: 'Guide',
-        index: '/icon',
-        title: '图标',
-        permiss: '5',
     },
     {
         id: '7',

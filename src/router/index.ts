@@ -86,16 +86,6 @@ const routes: RouteRecordRaw[] = [
                 },
                 component: () => import(/* webpackChunkName: "echarts" */ '../views/chart/echarts.vue'),
             },
-
-            {
-                path: '/icon',
-                name: 'icon',
-                meta: {
-                    title: '图标',
-                    permiss: '5',
-                },
-                component: () => import(/* webpackChunkName: "icon" */ '../views/pages/icon.vue'),
-            },
             {
                 path: '/ucenter',
                 name: 'ucenter',
@@ -166,15 +156,6 @@ const routes: RouteRecordRaw[] = [
                     permiss: '25',
                 },
                 component: () => import(/* webpackChunkName: "watermark" */ '../views/element/watermark.vue'),
-            },
-            {
-                path: '/carousel',
-                name: 'carousel',
-                meta: {
-                    title: '走马灯',
-                    permiss: '23',
-                },
-                component: () => import(/* webpackChunkName: "carousel" */ '../views/element/carousel.vue'),
             },
             {
                 path: '/tour',
