@@ -113,7 +113,7 @@ export const menuData: Menus[] = [
                 id: '31',
                 pid: '3',
                 index: '/table',
-                title: '基础表格',
+                title: '运动员信息',
             },
             {
                 id: '32',

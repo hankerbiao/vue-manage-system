@@ -1,9 +1,17 @@
 import request from '../utils/request';
 
-export const fetchData = () => {
+export const fetchAthletes = () => {
+    const url = `/api/v1/athlete/`;
     return request({
-        url: './mock/table.json',
+        url,
         method: 'get'
+    }).then(response => {
+        // 可以在这里处理响应
+        return response;
+    }).catch(error => {
+        // 处理请求错误
+        console.error('Error fetching athletes:', error);
+        throw error; // 可以选择重新抛出错误或返回错误信息
     });
 };
 

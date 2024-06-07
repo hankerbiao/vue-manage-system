@@ -2,7 +2,6 @@
 	<div class="search-container">
 		<el-form ref="searchRef" :model="query" :inline="true">
 			<el-form-item :label="item.label" :prop="item.prop" v-for="item in options">
-				<!-- 文本框、下拉框、日期框 -->
 				<el-input v-if="item.type === 'input'" v-model="query[item.prop]" :disabled="item.disabled"
 					:placeholder="item.placeholder" clearable></el-input>
 				<el-select v-else-if="item.type === 'select'" v-model="query[item.prop]" :disabled="item.disabled"
