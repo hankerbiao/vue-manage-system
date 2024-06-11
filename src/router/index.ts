@@ -52,21 +52,21 @@ const routes: RouteRecordRaw[] = [
             },
             {
                 path: '/table',
-                name: 'basetable',
+                name: 'table',
                 meta: {
                     title: '运动员信息',
                     permiss: '31',
                 },
-                component: () => import(/* webpackChunkName: "table" */ '../views/table/basetable.vue'),
+                component: () => import(/* webpackChunkName: "table" */ '../views/table/athlete-info.vue'),
             },
             {
-                path: '/table-editor',
-                name: 'table-editor',
+                path: '/schedules',
+                name: 'schedules',
                 meta: {
-                    title: '可编辑表格',
+                    title: '赛程信息',
                     permiss: '32',
                 },
-                component: () => import(/* webpackChunkName: "table-editor" */ '../views/table/table-editor.vue'),
+                component: () => import(/* webpackChunkName: "table-editor" */ '../views/table/schedules-info.vue'),
             },
             {
                 path: '/schart',

@@ -1,7 +1,7 @@
 import request from '../utils/request';
 
-export const fetchAthletes = () => {
-    const url = `/api/v1/athlete/`;
+export const fetchDatas = (url) => {
+    // const url = `/api/v1/athlete/`;
     return request({
         url,
         method: 'get'

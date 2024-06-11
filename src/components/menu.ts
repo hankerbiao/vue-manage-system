@@ -118,8 +118,8 @@ export const menuData: Menus[] = [
             {
                 id: '32',
                 pid: '3',
-                index: '/table-editor',
-                title: '可编辑表格',
+                index: '/schedules',
+                title: '赛程信息',
             },
             {
                 id: '33',
