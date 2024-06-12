@@ -1,10 +1,16 @@
 <template>
   <el-form :model="form" label-width="auto" style="max-width: 600px">
     <el-form-item label="赛程名称：">
-      <el-input v-model="form.name"/>
+      <el-autocomplete
+          v-model="scheduleName"
+          :fetch-suggestions="querySearchName"
+          clearable
+          placeholder="Please Input"
+          style="width: 300px; margin-right: auto;"
+      />
     </el-form-item>
     <el-form-item label="选择场地：">
-      <el-select v-model="form.field" placeholder="please select your zone">
+      <el-select v-model="form.field" placeholder="please select your zone" style="width: 300px; margin-right: auto;">
         <el-option
             v-for="option in options"
             :key="option.location"
@@ -44,12 +50,14 @@
 
 <script lang="ts" setup>
 import {onMounted, reactive, ref} from 'vue'
-import {fetchAthleteData, fetchDatas} from "@/api";
+import {fetchAthleteData, fetchDatas, fetchScheduleData} from "@/api";
 
 const options = ref([]);
 const state_red = ref('')
+const scheduleName = ref('')
 const state_cyan = ref('')
 const restaurants = ref<RestaurantItem[]>([])
+const restaurantsName = ref<RestaurantItem[]>([])
 const redLabel = ref(null);
 const cyanLabel = ref(null);
 
@@ -87,6 +95,14 @@ const querySearch = (queryString: string, cb: any) => {
   const results = queryString
       ? restaurants.value.filter(createFilter(queryString))
       : restaurants.value
+  cb(results)
+}
+
+
+const querySearchName = (queryString: string, cb: any) => {
+  const results = queryString
+      ? restaurantsName.value.filter(createFilter(queryString))
+      : restaurantsName.value
   cb(results)
 }
 
@@ -129,7 +145,17 @@ const fetchRestaurants = async () => {
   }
 };
 
+const fetchRestaurantsScheduleName = async () => {
+  try {
+    restaurantsName.value = await fetchScheduleData();
+  } catch (error) {
+    console.error('Error fetching restaurants:', error);
+  }
+};
+
+
+
 onMounted(async () => {
-  await Promise.all([fetchOptions(), fetchRestaurants()]);
+  await Promise.all([fetchOptions(), fetchRestaurants(),fetchRestaurantsScheduleName()]);
 });
 </script>

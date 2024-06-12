@@ -41,3 +41,21 @@ export const fetchAthleteData = async () => {
         console.error('Error in fetchAthleteData:', error);
     }
 };
+
+// 查询所有运动员姓名、单位、id
+export const fetchScheduleData = async () => {
+    let result = [];
+    try {
+        const res = await fetchDatas('/api/v1/schedules/schedules_name_list/');
+        let data = res.data.data
+        for (let key in data) {
+            let obj = {}
+            obj['value'] = data[key]
+            result.push(obj)
+        }
+        console.log(result)
+        return result
+    } catch (error) {
+        console.error('Error in fetchAthleteData:', error);
+    }
+};
