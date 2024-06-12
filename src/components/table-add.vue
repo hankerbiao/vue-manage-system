@@ -4,46 +4,61 @@
       <el-input v-model="form.name"/>
     </el-form-item>
     <el-form-item label="选择场地：">
-      <el-select v-model="form.region" placeholder="please select your zone">
-        <el-option label="A 场地" value="shanghai"/>
-        <el-option label="B 场地" value="beijing"/>
+      <el-select v-model="form.field" placeholder="please select your zone">
+        <el-option
+            v-for="option in options"
+            :key="option.location"
+            :label="option.name"
+            :value="option.location"
+        />
       </el-select>
     </el-form-item>
     <el-form-item label="红方运动员：">
       <el-autocomplete
-          v-model="state1"
+          v-model="state_red"
           :fetch-suggestions="querySearch"
           clearable
           class="inline-input w-50"
           placeholder="Please Input"
-          @select="handleSelect"
+          @select="handleSelectRed"
       />
-      <el-text class="red-label" type="danger" style="margin-left: 20px"> i am red</el-text>
+      <el-text ref="redLabel" class="red-label" type="danger" style="margin-left: 20px"></el-text>
     </el-form-item>
     <el-form-item label="青方运动员：">
       <el-autocomplete
-          v-model="state2"
+          v-model="state_cyan"
           :fetch-suggestions="querySearch"
           clearable
           class="inline-input w-50"
           placeholder="Please Input"
-          @select="handleSelect"
+          @select="handleSelectCyan"
       />
-      <el-text class="cyan-label" type="primary" style="margin-left: 20px">i am cyan</el-text>
+      <el-text ref="cyanLabel" class="cyan-label" type="primary" style="margin-left: 20px"></el-text>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="onSubmit">Create</el-button>
-      <el-button>Cancel</el-button>
+      <el-button @click="onCancel">Cancel</el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script lang="ts" setup>
-import {reactive} from 'vue'
-import {onMounted, ref} from 'vue'
+import {onMounted, reactive, ref} from 'vue'
+import {fetchAthleteData, fetchDatas} from "@/api";
 
-const {update} = defineProps({
+const options = ref([]);
+const state_red = ref('')
+const state_cyan = ref('')
+const restaurants = ref<RestaurantItem[]>([])
+const redLabel = ref(null);
+const cyanLabel = ref(null);
+
+const {update,cancel} = defineProps({
   update: {
+    type: Function,
+    required: true
+  } ,
+  cancel: {
     type: Function,
     required: true
   }
@@ -51,36 +66,31 @@ const {update} = defineProps({
 // do not use same name with ref
 const form = reactive({
   name: '',
-  region: '',
-  date1: '',
-  date2: '',
-  delivery: false,
-  type: [],
-  resource: '',
-  desc: '',
+  field: '',
 })
 
 const onSubmit = () => {
   update()  // 更新页面信息
 }
 
+const onCancel = () => {
+  cancel()
+}
 
 interface RestaurantItem {
   value: string
-  link: string
+  unit: string
+  id: number
 }
 
-const state1 = ref('')
-const state2 = ref('')
-
-const restaurants = ref<RestaurantItem[]>([])
 const querySearch = (queryString: string, cb: any) => {
   const results = queryString
       ? restaurants.value.filter(createFilter(queryString))
       : restaurants.value
-  // call callback function to return suggestions
   cb(results)
 }
+
+
 const createFilter = (queryString: string) => {
   return (restaurant: RestaurantItem) => {
     return (
@@ -88,23 +98,38 @@ const createFilter = (queryString: string) => {
     )
   }
 }
-const loadAll = () => {
-  return [
-    {value: 'vue', link: 'https://github.com/vuejs/vue'},
-    {value: 'element', link: 'https://github.com/ElemeFE/element'},
-    {value: 'cooking', link: 'https://github.com/ElemeFE/cooking'},
-    {value: 'mint-ui', link: 'https://github.com/ElemeFE/mint-ui'},
-    {value: 'vuex', link: 'https://github.com/vuejs/vuex'},
-    {value: 'vue-router', link: 'https://github.com/vuejs/vue-router'},
-    {value: 'babel', link: 'https://github.com/babel/babel'},
-  ]
-}
 
-const handleSelect = (item: RestaurantItem) => {
-  console.log(item)
-}
 
-onMounted(() => {
-  restaurants.value = loadAll()
-})
+const handleSelectRed = (item: RestaurantItem) => {
+  if (redLabel.value) {
+    redLabel.value.$el.innerText = item.unit;
+  }
+};
+
+const handleSelectCyan = (item: RestaurantItem) => {
+  if (cyanLabel.value) {
+    cyanLabel.value.$el.innerText = item.unit;
+  }
+};
+
+const fetchOptions = async () => {
+  try {
+    const res = await fetchDatas("/api/v1/fields/");
+    options.value = res.data.data;
+  } catch (error) {
+    console.error('Error fetching options:', error);
+  }
+};
+
+const fetchRestaurants = async () => {
+  try {
+    restaurants.value = await fetchAthleteData();
+  } catch (error) {
+    console.error('Error fetching restaurants:', error);
+  }
+};
+
+onMounted(async () => {
+  await Promise.all([fetchOptions(), fetchRestaurants()]);
+});
 </script>

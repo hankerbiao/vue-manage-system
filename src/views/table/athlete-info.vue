@@ -59,8 +59,4 @@ getData();
 </script>
 
 <style scoped>
-.danger {
-  color: red;
-  font-weight: bold;
-}
 </style>

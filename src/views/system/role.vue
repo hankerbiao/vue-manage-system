@@ -15,7 +15,7 @@
     <el-dialog :title="isEdit ? '编辑' : '新增'" v-model="visible" width="700px" destroy-on-close
                :close-on-click-modal="false" @close="closeDialog">
 <!--      <TableEdit :form-data="rowData" :options="options" :edit="isEdit" :update="updateData"/>-->
-          <TableAdd :update="updateData" />
+          <TableAdd :update="updateData" :cancel="closeDialog"/>
     </el-dialog>
     <el-dialog title="查看详情" v-model="visible1" width="700px" destroy-on-close>
       <TableDetail :data="viewData">
@@ -37,8 +37,6 @@ import TableCustom from '@/components/table-custom.vue';
 import TableDetail from '@/components/table-detail.vue';
 import {CirclePlusFilled} from '@element-plus/icons-vue';
 import {FormOption} from '@/types/form-option';
-import TableEdit from "@/components/table-edit.vue";
-
 
 // 表格相关
 let columns = ref([
