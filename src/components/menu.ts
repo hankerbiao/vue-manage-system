@@ -17,13 +17,13 @@ export const menuData: Menus[] = [
                 id: '11',
                 pid: '1',
                 index: '/system-user',
-                title: '用户管理',
+                title: '场地管理',
             },
             {
                 id: '12',
                 pid: '1',
                 index: '/system-role',
-                title: '角色管理',
+                title: '赛程管理',
             },
             {
                 id: '13',
@@ -105,7 +105,7 @@ export const menuData: Menus[] = [
     },
     {
         id: '3',
-        title: '表格',
+        title: '比赛数据库',
         index: '3',
         icon: 'Calendar',
         children: [

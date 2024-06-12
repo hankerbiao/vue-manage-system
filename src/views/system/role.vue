@@ -1,6 +1,5 @@
 <template>
     <div>
-        <TableSearch :query="query" :options="searchOpt" :search="handleSearch" />
         <div class="container">
 
             <TableCustom :columns="columns" :tableData="tableData" :total="page.total" :viewFunc="handleView"
@@ -12,9 +11,7 @@
                     <el-tag type="success" v-if="rows.status">启用</el-tag>
                     <el-tag type="danger" v-else>禁用</el-tag>
                 </template>
-                <template #permissions="{ rows }">
-                    <el-button type="primary" size="small" plain @click="handlePermission(rows)">管理</el-button>
-                </template>
+
             </TableCustom>
         </div>
         <el-dialog :title="isEdit ? '编辑' : '新增'" v-model="visible" width="700px" destroy-on-close
@@ -29,9 +26,6 @@
                 </template>
             </TableDetail>
         </el-dialog>
-        <el-dialog title="权限管理" v-model="visible2" width="500px" destroy-on-close>
-            <RolePermission :permiss-options="permissOptions" />
-        </el-dialog>
     </div>
 </template>
 
@@ -39,23 +33,12 @@
 import { ref, reactive } from 'vue';
 import { ElMessage } from 'element-plus';
 import { Role } from '@/types/role';
-import { fetchRoleData } from '@/api';
+import {fetchDatas} from '@/api';
 import TableCustom from '@/components/table-custom.vue';
 import TableDetail from '@/components/table-detail.vue';
-import RolePermission from './role-permission.vue'
 import { CirclePlusFilled } from '@element-plus/icons-vue';
-import { FormOption, FormOptionList } from '@/types/form-option';
+import { FormOption } from '@/types/form-option';
 
-// 查询相关
-const query = reactive({
-    name: '',
-});
-const searchOpt = ref<FormOptionList[]>([
-    { type: 'input', label: '角色名称：', prop: 'name' }
-])
-const handleSearch = () => {
-    changePage(1);
-};
 
 // 表格相关
 let columns = ref([
@@ -63,7 +46,6 @@ let columns = ref([
     { prop: 'name', label: '角色名称' },
     { prop: 'key', label: '角色标识' },
     { prop: 'status', label: '状态' },
-    { prop: 'permissions', label: '权限管理' },
     { prop: 'operator', label: '操作', width: 250 },
 ])
 const page = reactive({
@@ -73,9 +55,9 @@ const page = reactive({
 })
 const tableData = ref<Role[]>([]);
 const getData = async () => {
-    const res = await fetchRoleData()
-    tableData.value = res.data.list;
-    page.total = res.data.pageTotal;
+    const res = await fetchDatas('/api/v1/schedules/')
+    tableData.value = res.data.data
+    console.log(res.data)
 };
 getData();
 const changePage = (val: number) => {
@@ -146,17 +128,6 @@ const handleDelete = (row: Role) => {
     ElMessage.success('删除成功');
 }
 
-
-// 权限管理弹窗相关
-const visible2 = ref(false);
-const permissOptions = ref({})
-const handlePermission = (row: Role) => {
-    visible2.value = true;
-    permissOptions.value = {
-        id: row.id,
-        permiss: row.permiss
-    };
-}
 </script>
 
 <style scoped></style>

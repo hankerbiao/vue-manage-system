@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="container">
-      <el-input v-model="search" size="large" placeholder="搜索运动员姓名" style="width: 300px;"/>
+      <el-input v-model="search" size="large" placeholder="搜索运动员姓名/单位" style="width: 300px;"/>
       <br/>
       <br/>
       <el-table :data="filterTableData" style="width: 100%">
@@ -37,15 +37,25 @@ const tableData = ref<Athlete[]>([])
 const filterTableData = computed(() =>
     tableData.value.filter(
         (data) =>
-            !search.value || data.name.toLowerCase().includes(search.value.toLowerCase())
+            !search.value || data.name.toLowerCase().includes(search.value.toLowerCase()) || data.unit.toLowerCase().includes(search.value.toLowerCase())
     )
 )
 
 const getData = async () => {
-  const res = await fetchDatas(`/api/v1/athlete/`)
-  tableData.value = res.data.data
-}
-getData()
+  try {
+    const res = await fetchDatas(`/api/v1/athlete/`);
+    tableData.value = res.data.data;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
+// Call getData every 10 seconds (10000 milliseconds)
+setInterval(getData, 10000);
+
+// Optionally, you can call getData immediately to fetch data right away
+getData();
+
 </script>
 
 <style scoped>
