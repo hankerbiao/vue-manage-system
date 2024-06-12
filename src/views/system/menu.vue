@@ -13,6 +13,7 @@
                 </template>
             </TableCustom>
 
+
         </div>
         <el-dialog :title="isEdit ? '编辑' : '新增'" v-model="visible" width="700px" destroy-on-close
             :close-on-click-modal="false" @close="closeDialog">
@@ -42,6 +43,7 @@ import { CirclePlusFilled } from '@element-plus/icons-vue';
 import { Menus } from '@/types/menu';
 import TableCustom from '@/components/table-custom.vue';
 import TableDetail from '@/components/table-detail.vue';
+import TableAdd from '@/components/table-add.vue';
 import { FormOption } from '@/types/form-option';
 import { menuData } from '@/components/menu';
 
@@ -89,7 +91,8 @@ const handleEdit = (row: Menus) => {
     isEdit.value = true;
     visible.value = true;
 };
-const updateData = () => {
+const updateData = (data) => {
+  console.log(data)
     closeDialog();
 };
 
