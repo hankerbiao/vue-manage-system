@@ -1,19 +1,35 @@
 import request from '../utils/request';
 
 export const fetchDatas = (url) => {
-    // const url = `/api/v1/athlete/`;
     return request({
         url,
         method: 'get'
     }).then(response => {
-        // 可以在这里处理响应
         return response;
     }).catch(error => {
-        // 处理请求错误
         console.error('Error fetching athletes:', error);
-        throw error; // 可以选择重新抛出错误或返回错误信息
+        throw error;
     });
 };
+
+export const postData = (url, data) => {
+    return request({
+        url,
+        method: 'post',
+        data
+    }).then(response => {
+        return response;
+    }).catch(error => {
+        console.error('Error posting data:', error);
+        throw error;
+    });
+};
+
+export const createSchedule = async (data) => {
+    const url = "/api/v1/schedules"
+    return postData(url, data)
+}
+
 
 export const fetchUserData = () => {
     return request({
@@ -32,8 +48,8 @@ export const fetchAthleteData = async () => {
         for (let key in data) {
             let obj = {}
             obj['value'] = data[key].name
-            obj['id'] =  data[key].id
-            obj['unit'] =  data[key].unit
+            obj['id'] = data[key].id
+            obj['unit'] = data[key].unit
             result.push(obj)
         }
         return result

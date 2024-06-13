@@ -1,5 +1,5 @@
 <template>
-  <el-form :model="form" label-width="auto" style="max-width: 600px">
+  <el-form :model="form" label-width="auto" style="max-width: 1000px ">
     <el-form-item label="赛程名称：">
       <el-autocomplete
           v-model="scheduleName"
@@ -13,9 +13,9 @@
       <el-select v-model="form.field" placeholder="please select your zone" style="width: 300px; margin-right: auto;">
         <el-option
             v-for="option in options"
-            :key="option.location"
+            :key="option.name"
             :label="option.name"
-            :value="option.location"
+            :value="option.id"
         />
       </el-select>
     </el-form-item>
@@ -50,7 +50,8 @@
 
 <script lang="ts" setup>
 import {onMounted, reactive, ref} from 'vue'
-import {fetchAthleteData, fetchDatas, fetchScheduleData} from "@/api";
+import {createSchedule, fetchAthleteData, fetchDatas, fetchScheduleData} from "@/api";
+import {resultProps} from "element-plus";
 
 const options = ref([]);
 const state_red = ref('')
@@ -77,7 +78,33 @@ const form = reactive({
   field: '',
 })
 
-const onSubmit = () => {
+const onSubmit = async () => {
+  console.log(form)
+  // schema name
+  console.log(scheduleName.value)
+  // field_id
+  console.log(form.field)
+  // red id
+  let red_id = undefined
+  // cyan id
+  let cyan_id = undefined
+  for (let key in restaurants.value){
+    if (restaurants.value[key].value == state_red.value){
+      red_id = restaurants.value[key].id
+    }
+    if (restaurants.value[key].value == state_cyan.value){
+      cyan_id = restaurants.value[key].id
+    }
+  }
+  const data = {
+    name:scheduleName.value,
+    site_id:form.field,
+    red_id:red_id,
+    cyan_id:cyan_id,
+    status:0
+  }
+  await createSchedule(data)
+
   update()  // 更新页面信息
 }
 
