@@ -47,12 +47,6 @@
                     <template #default="{ row, column, $index }" v-if="!item.type">
                         <slot :name="item.prop" :rows="row" :index="$index">
                             <template v-if="item.prop == 'operator'">
-                                <el-button type="warning" size="small" :icon="View" @click="viewFunc(row)">
-                                    查看
-                                </el-button>
-                                <el-button type="primary" size="small" :icon="Edit" @click="editFunc(row)">
-                                    编辑
-                                </el-button>
                                 <el-button type="danger" size="small" :icon="Delete" @click="handleDelete(row)">
                                     删除
                                 </el-button>

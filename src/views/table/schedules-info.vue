@@ -6,7 +6,7 @@
       <br/>
       <el-table :data="filterTableData" style="width: 100%">
         <el-table-column label="赛程名称" prop="name" align="center"/>
-        <el-table-column label="场地ID" prop="site_id" align="center"/>
+        <el-table-column label="场地名称" prop="site_name" align="center"/>
         <el-table-column label="比赛状态" align="center">
           <template #default="scope">
             <el-tag :type="scope.row.status === 0 ? 'info' : scope.row.status === 1 ? 'warning' : 'success'">
@@ -29,8 +29,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
-import { fetchDatas } from "@/api/index"
+import {computed, ref} from 'vue'
+import {fetchDatas} from "@/api/index"
 
 interface Schedule {
   id: number
@@ -48,6 +48,7 @@ interface Schedule {
   cyan_name?: string
   red_unit?: string
   cyan_unit?: string
+  site_name: string
   winner_id?: number
 }
 

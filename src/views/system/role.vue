@@ -6,32 +6,20 @@
         <template #toolbarBtn>
           <el-button type="warning" :icon="CirclePlusFilled" @click="visible = true">新增赛程</el-button>
         </template>
-        <template #status="{ rows }">
-          <el-tag type="success" v-if="rows.status">进行中</el-tag>
-          <el-tag type="danger" v-else>已结束</el-tag>
-        </template>
       </TableCustom>
     </div>
     <el-dialog :title="isEdit ? '编辑' : '新增'" v-model="visible" width="700px" destroy-on-close
                :close-on-click-modal="false" @close="closeDialog">
       <TableAdd :update="updateData" :cancel="closeDialog"/>
     </el-dialog>
-    <el-dialog title="查看详情" v-model="visible1" width="700px" destroy-on-close>
-      <TableDetail :data="viewData">
-        <template #status="{ rows }">
-          <el-tag type="success" v-if="rows.status == 0">待开始</el-tag>
-          <el-tag type="success" v-if="rows.status == 1">进行中</el-tag>
-          <el-tag type="danger" v-else>已结束</el-tag>
-        </template>
-      </TableDetail>
-    </el-dialog>
+
   </div>
 </template>
 <script setup lang="ts" name="system-role">
 import {ref, reactive} from 'vue';
 import {ElMessage} from 'element-plus';
 import {Role} from '@/types/role';
-import {fetchDatas} from '@/api';
+import {deleteSchedule, fetchDatas} from '@/api';
 import TableCustom from '@/components/table-custom.vue';
 import TableDetail from '@/components/table-detail.vue';
 import {CirclePlusFilled} from '@element-plus/icons-vue';
@@ -41,9 +29,9 @@ import {FormOption} from '@/types/form-option';
 let columns = ref([
   {type: 'index', label: '序号', width: 55, align: 'center'},
   {prop: 'name', label: '赛程名称'},
-  {prop: 'red_key', label: '红方运动员'},
-  {prop: 'cyan_key', label: '青方运动员'},
-  {prop: 'status', label: '状态'},
+  {prop: 'site_name', label: '场地名称'},
+  {prop: 'red_name', label: '红方运动员'},
+  {prop: 'cyan_name', label: '青方运动员'},
   {prop: 'operator', label: '操作', width: 250},
 ])
 const page = reactive({
@@ -82,9 +70,8 @@ const options = ref<FormOption>({
   span: 24,
   list: [
     {type: 'input', label: '赛程名称', prop: 'name', required: true},
-    {type: 'input', label: '红方运动员', prop: 'red_key', required: true},
-    {type: 'input', label: '青方运动员', prop: 'cyan_key', required: true},
-    {type: 'switch', label: '状态', prop: 'status', required: false, activeText: '进行中', inactiveText: '已结束'},
+    {type: 'input', label: '红方运动员', prop: 'red_name', required: true},
+    {type: 'input', label: '青方运动员', prop: 'cyan_name', required: true},
   ]
 });
 const visible = ref(false);
@@ -92,14 +79,17 @@ const isEdit = ref(false);
 const rowData = ref<Role | {}>({});
 
 const handleEdit = (row: Role) => {
+  console.log("edit!!!")
   rowData.value = {...row};
+  console.log(row.name)
+  console.log({...row})
   isEdit.value = true;
   visible.value = true;
 };
 
 interface UpdateData {
   name: string,
-  red_key: string,
+  red_name: string,
   status: boolean
 }
 
@@ -146,11 +136,11 @@ const handleView = (row: Role) => {
       label: '赛程名称',
     },
     {
-      prop: 'red_key',
+      prop: 'red_name',
       label: '红方运动员',
     },
     {
-      prop: 'cyan_key',
+      prop: 'cyan_name',
       label: '青方运动员',
     },
     {
@@ -162,7 +152,9 @@ const handleView = (row: Role) => {
 };
 
 // 删除相关
-const handleDelete = (row: Role) => {
+const handleDelete = async (row: Role) => {
+  await deleteSchedule(row.id)
+  await getData();
   ElMessage.success('删除成功');
 };
 

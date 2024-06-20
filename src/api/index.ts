@@ -25,6 +25,29 @@ export const postData = (url, data) => {
     });
 };
 
+export const deleteData = (url) => {
+    return request({
+        url,
+        method: 'delete'
+    }).then(response => {
+        return response;
+    }).catch(error => {
+        console.error('Error deleting data:', error);
+        throw error;
+    });
+};
+
+export const deleteSchedule = async (schedule_id) => {
+    const url = `/api/v1/schedules/${schedule_id}`;
+    return deleteData(url)
+};
+
+
+export const deleteField = async (field_id) => {
+    const url = `/api/v1/fields/${field_id}`;
+    return deleteData(url)
+};
+
 export const createSchedule = async (data) => {
     const url = "/api/v1/schedules"
     return postData(url, data)
@@ -75,3 +98,13 @@ export const fetchScheduleData = async () => {
         console.error('Error in fetchAthleteData:', error);
     }
 };
+
+export const fetchFieldData = async () => {
+    try {
+        const res = await fetchDatas('/api/v1/fields')
+        return res.data.data
+    } catch (error) {
+        console.error('Error in fetchFieldData:', error);
+
+    }
+}

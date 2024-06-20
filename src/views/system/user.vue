@@ -1,6 +1,5 @@
 <template>
     <div>
-        <TableSearch :query="query" :options="searchOpt" :search="handleSearch" />
         <div class="container">
             <TableCustom :columns="columns" :tableData="tableData" :total="page.total" :viewFunc="handleView"
                 :delFunc="handleDelete" :page-change="changePage" :editFunc="handleEdit">
@@ -25,7 +24,7 @@ import { ref, reactive } from 'vue';
 import { ElMessage } from 'element-plus';
 import { CirclePlusFilled } from '@element-plus/icons-vue';
 import { User } from '@/types/user';
-import { fetchUserData } from '@/api';
+import {deleteField, deleteSchedule, fetchFieldData, fetchUserData} from '@/api';
 import TableCustom from '@/components/table-custom.vue';
 import TableDetail from '@/components/table-detail.vue';
 import TableSearch from '@/components/table-search.vue';
@@ -45,9 +44,7 @@ const handleSearch = () => {
 // 表格相关
 let columns = ref([
     { type: 'index', label: '序号', width: 55, align: 'center' },
-    { prop: 'name', label: '用户名' },
-    { prop: 'phone', label: '手机号' },
-    { prop: 'role', label: '角色' },
+    { prop: 'name', label: '场地名称' },
     { prop: 'operator', label: '操作', width: 250 },
 ])
 const page = reactive({
@@ -57,9 +54,10 @@ const page = reactive({
 })
 const tableData = ref<User[]>([]);
 const getData = async () => {
-    const res = await fetchUserData()
-    tableData.value = res.data.list;
-    page.total = res.data.pageTotal;
+    const res = await fetchFieldData();
+    console.log(res);
+    tableData.value = res;
+    page.total = res.length;
 };
 getData();
 
@@ -73,11 +71,7 @@ let options = ref<FormOption>({
     labelWidth: '100px',
     span: 12,
     list: [
-        { type: 'input', label: '用户名', prop: 'name', required: true },
-        { type: 'input', label: '手机号', prop: 'phone', required: true },
-        { type: 'input', label: '密码', prop: 'password', required: true },
-        { type: 'input', label: '邮箱', prop: 'email', required: true },
-        { type: 'input', label: '角色', prop: 'role', required: true },
+        { type: 'input', label: '场地名称', prop: 'name', required: true },
     ]
 })
 const visible = ref(false);
@@ -114,33 +108,16 @@ const handleView = (row: User) => {
         {
             prop: 'name',
             label: '用户名',
-        },
-        {
-            prop: 'password',
-            label: '密码',
-        },
-        {
-            prop: 'email',
-            label: '邮箱',
-        },
-        {
-            prop: 'phone',
-            label: '电话',
-        },
-        {
-            prop: 'role',
-            label: '角色',
-        },
-        {
-            prop: 'date',
-            label: '注册日期',
-        },
+        }
     ]
     visible1.value = true;
 };
 
 // 删除相关
-const handleDelete = (row: User) => {
+const handleDelete = async (row: User) => {
+  // 处理删除
+  await deleteField(row.id)
+  await getData();
     ElMessage.success('删除成功');
 }
 </script>
